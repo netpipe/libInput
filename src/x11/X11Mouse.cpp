@@ -43,7 +43,7 @@ MouseStatePtr X11Mouse::getMouseState() {
 
 			mouse_state->x = val_state->valuators[0];
 			mouse_state->y = val_state->valuators[1];
-
+            printf("pressure pen %i" ,val_state->valuators[2]);
 			break;
 		}
 		case ButtonClass:
