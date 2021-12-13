@@ -9,11 +9,11 @@ endif()
 add_library(Input ${Input_SOURCES} ${Input_HEADERS})
 	
 if (X11_BACKEND)
-	find_package(X11 COMPONENTS xcb Xau Xext Xdmcp Xi REQUIRED)
+	find_package(X11 COMPONENTS Xau Xext Xdmcp Xi REQUIRED) #xcb
 	find_package(Threads REQUIRED)
 	target_link_libraries(Input
 		${X11_LIBRARIES}
-		${X11_xcb_LIB}
+#		${X11_xcb_LIB}
 		${X11_Xau_LIB}
 		${X11_Xdmcp_LIB}
 		${X11_Xi_LIB}
