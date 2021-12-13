@@ -9,5 +9,14 @@ endif()
 add_library(Input ${Input_SOURCES} ${Input_HEADERS})
 	
 if (X11_BACKEND)
-	target_link_libraries(Input X11 Xi Xext xcb Xau Xdmcp pthread)
+	find_package(X11 COMPONENTS xcb Xau Xext Xdmcp Xi REQUIRED)
+	find_package(Threads REQUIRED)
+	target_link_libraries(Input
+		${X11_LIBRARIES}
+		${X11_xcb_LIB}
+		${X11_Xau_LIB}
+		${X11_Xdmcp_LIB}
+		${X11_Xi_LIB}
+		${X11_Xext_LIB}
+		Threads::Threads)
 endif()
