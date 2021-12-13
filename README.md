@@ -8,6 +8,7 @@ https://www.freelancer.com/u/mykelectronics was freelancer used for project.
 
 
 https://github.com/netpipe/frostWM has more x11 code there
+might even work with windows via www.straightrunning.com/XmingNotes ?
 
 todo
 xdotool screen click support soon
