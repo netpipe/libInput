@@ -22,4 +22,4 @@ https://github.com/NoobsArePeople2/manymouse has parts for the windows version.
 
 
 todo
-xdotool screen click support soon
+xdotool screen click support and cairo passthrough /screenshots soon
