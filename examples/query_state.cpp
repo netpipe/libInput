@@ -1,5 +1,13 @@
-#include "../src/x11/X11InputController.h"
-#include "../src/x11/X11Keyboard.h"
+#include "../src/InputController.h"
+#include "../src/Keyboard.h"
+#include "../src/Mouse.h"
+
+#if USE_X11
+	#include "../src/x11/X11InputController.h"
+	#include "../src/x11/X11Keyboard.h"
+#else
+	#error Please specify a suitable platform
+#endif
 
 #include <X11/Xutil.h>
 #include <cstdio>
@@ -28,20 +36,30 @@ int main(int argc, char* argv[]) {
 	XMapWindow(display, main_window);
 	XFlush(display);
 
-	X11InputController input_controller(display, &main_window);
-	if (!input_controller.initialize()) {
+	InputControllerPtr input_controller{nullptr};
+
+	#if USE_X11
+		input_controller = InputControllerPtr{new X11InputController(display, &main_window)};
+	#endif
+
+	if (!input_controller) {
+		printf("ERROR: failed to initialize input controller\n");
+		exit(1);
+	}
+
+	if (!input_controller->initialize()) {
 		fprintf(stderr, "Failed to initialize X11 input controller\n");
 		return -1;
 	}
 
-	input_controller.enumerate();
-	auto keyboards = input_controller.getKeyboards();
+	input_controller->enumerate();
+	auto keyboards = input_controller->getKeyboards();
 
 	for (const auto& keyboard : keyboards) {
 		printf("Found keyboard %s with device id: %d\n", keyboard->name(), keyboard->deviceId());
 	}
 
-	auto mice = input_controller.getMice();
+	auto mice = input_controller->getMice();
 	for (const auto mouse : mice) {
 		printf("Found a mouse %s with device id: %d\n", mouse->name(), mouse->deviceId());
 	}
@@ -63,7 +81,7 @@ int main(int argc, char* argv[]) {
 		if (choice == '1') {
 			printf("Enter the device id\n");
 			cin >> device_id;
-			mouse = input_controller.getMouseById(device_id);
+			mouse = input_controller->getMouseById(device_id);
 			if (mouse) {
 				printf("Selected mouse with device id: %d\n", mouse->deviceId());
 				input_valid = true;
@@ -73,7 +91,7 @@ int main(int argc, char* argv[]) {
 		} else if (choice == '2') {
 			printf("Enter the device id\n");
 			cin >> device_id;
-			keyboard = input_controller.getKeyboardById(device_id);
+			keyboard = input_controller->getKeyboardById(device_id);
 			if (keyboard) {
 				printf("Selected keyboard with device id: %d\n", keyboard->deviceId());
 				input_valid = true;
