@@ -23,3 +23,4 @@ https://github.com/NoobsArePeople2/manymouse has parts for the windows version.
 
 todo
 xdotool screen click support and cairo passthrough /screenshots soon
+currently has wacom tablet support just needs to be finished.
