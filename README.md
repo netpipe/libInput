@@ -11,7 +11,7 @@ https://www.freelancer.com/u/mykelectronics was freelancer used for project.
 https://github.com/netpipe/frostWM has more x11 code there
 might even work with windows via www.straightrunning.com/XmingNotes ?
 might impliment into OIS next open input system
-
+https://github.com/NoobsArePeople2/manymouse has parts for the windows version.
 
 
 
