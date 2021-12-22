@@ -6,11 +6,52 @@
  */
 
 #include "X11Mouse.h"
+#include <cstring>
 
 X11Mouse::X11Mouse(XIDeviceInfo* device_info, X11InputController* controller)
-	: X11InputDevice{device_info}, m_controller{controller} {
+		: m_minX{0.0f}, m_maxX{0.0f}, m_minY{0.0f}, m_maxY{0.0f},
+		  X11InputDevice{device_info}, m_controller{controller} {
 	// TODO Auto-generated constructor stub
 	m_device_type = DeviceType::MOUSE;
+
+	XIAnyClassInfo **classes = device_info->classes; // array of pointers
+	for (int i = 0; i < device_info->num_classes; i++) {
+		if(classes[i]->type == XIValuatorClass) {
+			XIValuatorClassInfo* vinfo = (XIValuatorClassInfo*)classes[i];
+			auto min = vinfo->min;
+			auto max = vinfo->max;
+			char *name = vinfo->label ? XGetAtomName(m_controller->display(), vinfo->label) : NULL;
+			if (strncmp(name, "Rel X", 5) == 0) {
+				m_minX = min;
+				m_maxX = max;
+			} else if (strncmp(name, "Rel Y", 5) == 0) {
+				m_minY = min;
+				m_maxY = max;
+			} else {
+				printf("WARN: %s cannot handle valuator info %s\n", device_info->name, name);
+			}
+			XFree(name);
+		}
+	}
+
+	printf("Created X11 device with minX: %f, maxX: %f, minY: %f, maxY: %f\n",
+		m_minX, m_maxX, m_minY, m_maxY);
+}
+
+double X11Mouse::MinimumX() {
+	return m_minX;
+}
+
+double X11Mouse::MaximumX() {
+	return m_maxX;
+}
+
+double X11Mouse::MinimumY() {
+	return m_minY;
+}
+
+double X11Mouse::MaximumY() {
+	return m_maxY;
 }
 
 MouseStatePtr X11Mouse::getMouseState() {

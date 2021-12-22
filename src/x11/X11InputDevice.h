@@ -8,7 +8,7 @@
 #ifndef X11_X11INPUTDEVICE_H_
 #define X11_X11INPUTDEVICE_H_
 
-#include "../InputDevice.h"
+#include <InputDevice.h>
 #include <X11/extensions/XInput2.h>
 
 class X11InputDevice;

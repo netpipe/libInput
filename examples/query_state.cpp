@@ -1,6 +1,6 @@
-#include "../src/InputController.h"
-#include "../src/Keyboard.h"
-#include "../src/Mouse.h"
+#include <InputController.h>
+#include <Keyboard.h>
+#include <Mouse.h>
 
 #if USE_X11
 	#include "../src/x11/X11InputController.h"
