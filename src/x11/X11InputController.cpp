@@ -80,6 +80,7 @@ X11InputDevicePtr X11InputController::createX11InputDevice(XIDeviceInfo* device_
 	case XIMasterKeyboard:
 		device = X11KeyboardPtr{new X11Keyboard(device_info, this)};
 		device->setAsMaster(true);
+		m_master_keyboard_id = device->deviceId();
 		break;
 	case XISlaveKeyboard:
 		device = X11KeyboardPtr{new X11Keyboard(device_info, this)};
@@ -88,6 +89,7 @@ X11InputDevicePtr X11InputController::createX11InputDevice(XIDeviceInfo* device_
 	case XIMasterPointer:
 		device = X11MousePtr{new X11Mouse(device_info, this)};
 		device->setAsMaster(true);
+		m_master_pointer_id = device->deviceId();
 		break;
 	case XISlavePointer:
 		device = X11MousePtr{new X11Mouse(device_info, this)};
@@ -148,6 +150,10 @@ MouseState X11InputController::getMouseState() {
 	return state;
 }
 
+int X11InputController::detachDevice(InputDevicePtr device) {
+	detachDeviceById(device->deviceId());
+}
+
 int X11InputController::detachDeviceById(int device_id) {
 	// see https://www.x.org/releases/X11R7.5/doc/man/man3/XIChangeHierarchy.3.html
 	// & https://github.com/freedesktop/xorg-xinput
@@ -158,4 +164,40 @@ int X11InputController::detachDeviceById(int device_id) {
 	change.detach.deviceid = device_id;
 
 	return XIChangeHierarchy(m_display, &change, 1);
+}
+
+int X11InputController::attachDevice(InputDevicePtr device) {
+	switch (device->deviceType()) {
+	case InputDevice::DeviceType::MOUSE:
+		attachDeviceById(device->deviceId(), true);
+		break;
+	case InputDevice::DeviceType::KEYBOARD:
+		attachDeviceById(device->deviceId(), false);
+		break;
+	default:
+		printf("ERROR: cannot attach invalid device\n");
+	}
+}
+
+int X11InputController::attachDeviceById(int device_id, bool is_pointer) {
+	// see https://www.x.org/releases/X11R7.5/doc/man/man3/XIChangeHierarchy.3.html
+	// & https://github.com/freedesktop/xorg-xinput
+	// & https://wiki.archlinux.org/title/Multi-pointer_X
+	XIAnyHierarchyChangeInfo change;
+
+	change.attach.type = XIAttachSlave;
+	change.attach.deviceid = device_id;
+	if (is_pointer) {
+		change.attach.new_master = m_master_pointer_id;
+		printf("Attaching pointer: %d to master device: %d\n", change.attach.deviceid, change.attach.new_master);
+	} else {
+		change.attach.new_master = m_master_keyboard_id;
+		printf("Attaching keyboard: %d to master device: %d\n", change.attach.deviceid, change.attach.new_master);
+	}
+
+	return XIChangeHierarchy(m_display, &change, 1);
+}
+
+Display* X11InputController::display() {
+	return m_display;
 }

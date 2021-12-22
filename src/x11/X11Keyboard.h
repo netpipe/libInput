@@ -10,7 +10,7 @@
 
 #include "X11InputDevice.h"
 #include "X11InputController.h"
-#include "../Keyboard.h"
+#include <Keyboard.h>
 
 class X11Keyboard;
 using X11KeyboardPtr = std::shared_ptr<X11Keyboard>;

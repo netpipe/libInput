@@ -13,6 +13,10 @@
 #include "Mouse.h"
 #include <vector>
 
+class InputController;
+
+using InputControllerPtr = std::shared_ptr<InputController>;
+
 class InputController {
 protected:
 	std::vector<InputDevicePtr> m_devices;
