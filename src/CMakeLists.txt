@@ -25,6 +25,13 @@ if (X11_BACKEND)
 		${X11_Xdmcp_LIB}
 		${X11_Xi_LIB}
 		${X11_Xext_LIB}
+		${X11_Xcomposite_LIB}
+		${X11_Xfixes_LIB}
+		${X11_Xtst_LIB}
+		${X11_Xrender_LIB}
+		${X11_Xinerama_LIB}
+		${X11_xkbcommon_LIB}
+		${CMAKE_DL_LIBS}
 		Threads::Threads)
 endif()
 
