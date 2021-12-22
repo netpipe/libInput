@@ -5,5 +5,6 @@ add_executable(query_state query_state.cpp)
 target_link_libraries(query_state PRIVATE Input)
 
 if (X11_BACKEND)
+    add_compile_definitions(USE_X11=1)
     target_compile_definitions(query_state PRIVATE USE_X11=1)
 endif()
