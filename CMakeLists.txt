@@ -12,7 +12,7 @@ if (X11_BACKEND)
     find_package(X11 COMPONENTS Xau
 	Xext Xdmcp Xi
 	Xtst Xfixes Xcomposite
-	Xrender Xinerama xkbcommon
+	Xrender Xinerama
 	REQUIRED)
 
     find_package(Threads REQUIRED)

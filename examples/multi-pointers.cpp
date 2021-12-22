@@ -98,7 +98,7 @@ Window CreateOverlayWindow(Display* d, Window parent, cairo_surface_t** overlay_
     Window overlay = XCreateWindow(
         d, parent,
         0, 0, overlay_width, overlay_height, 0,
-        vinfo.depth, InputOutput, 
+        vinfo.depth, InputOutput,
         vinfo.visual,
         CWOverrideRedirect | CWColormap | CWBackPixel | CWBorderPixel, &attrs
     );
@@ -146,7 +146,7 @@ void SendMouseButtonWindow(Display* d, Window w, int x, int y, int button, bool 
     state |= (button == Button2 ? Button2Mask : 0);
     state |= (button == Button3 ? Button3Mask : 0);
     btn_event.state = state; // state prior to the event
-    
+
     btn_event.x_root = x;
     btn_event.y_root = y;
     //btn_event.x = x;
@@ -158,14 +158,14 @@ void SendMouseButtonWindow(Display* d, Window w, int x, int y, int button, bool 
                           x, y, &btn_event.x, &btn_event.y, &child);
 
     //printf("Win id: %d, press: %d, child: %d, src(x): %d, src(y): %d, trans(x): %d, trans(y): %d\n", w, pressed, child, x, y, btn_event.x, btn_event.y);
-   
+
     btn_event.same_screen = True;
-    
+
     Bool propagate = False;
     int ret = 0;
     // see https://tronche.com/gui/x/xlib/events/mask.html for available event masks
     ret = XSendEvent(d, w, propagate, ButtonPressMask, (XEvent *)&btn_event);
-    XFlush(d); 
+    XFlush(d);
     if (w == focused_win) {
        printf("Focused window: \n");
        printf("Win id: %d, press: %d, child: %d, src(x): %d, src(y): %d, trans(x): %d, trans(y): %d\n", w, pressed, child, x, y, btn_event.x, btn_event.y);
@@ -175,13 +175,13 @@ void SendMouseButtonWindow(Display* d, Window w, int x, int y, int button, bool 
 }
 
 void SendMouseButtonDownWindow(Display* d, Window w, int x, int y, int button) {
-    if (w == focused_win) 
+    if (w == focused_win)
         printf("Sending mouse down to at x: %d, y:%d, button: %d, win: %d\n", x, y, button, w);
     SendMouseButtonWindow(d, w, x, y, button, true);
 }
 
 void SendMouseButtonUpWindow(Display* d, Window w, int x, int y, int button) {
-    if (w == focused_win) 
+    if (w == focused_win)
         printf("Sending mouse up to at x: %d, y:%d, button: %d, win: %d\n", x, y, button, w);
     SendMouseButtonWindow(d, w, x, y, button, false);
 }
@@ -193,7 +193,7 @@ bool WindowUnderOverlay(Display* d, Window overlay, Window window) {
     XGetWindowAttributes(d, overlay, &oa);
     XGetWindowAttributes(d, window, &wa);
 
-    //printf("Overlay id: %d, x: %d, y:%d, width: %d, height: %d, state: %d\n", overlay, oa.x, oa.y, oa.width, oa.height, oa.map_state); 
+    //printf("Overlay id: %d, x: %d, y:%d, width: %d, height: %d, state: %d\n", overlay, oa.x, oa.y, oa.width, oa.height, oa.map_state);
     //printf("Window id: %d, x: %d, y:%d, width: %d, height: %d, state: %d\n", window, wa.x, wa.y, wa.width, wa.height, wa.map_state);
 
     return true;
@@ -202,9 +202,9 @@ bool WindowUnderOverlay(Display* d, Window overlay, Window window) {
         return false;
 
     if (wa.y < oa.y)
-        return false; 
-    
-    return true;    
+        return false;
+
+    return true;
 }
 
 void SendMouseDown(Display* d, int x, int y, int button) {
@@ -248,13 +248,13 @@ void SendMouseDown(Display* d, int x, int y, int button) {
 void SendMouseUp(Display* d, int x, int y, int button) {
 #if 1
     SendFakeMouseButton(d, x, y, button, false);
-#else    
+#else
     Window root = DefaultRootWindow(d);
     Window root_return;
     Window parent_return;
     Window* children;
     unsigned int n_children;
-    
+
     printf("Sending mouse up. x:%d, y: %d, button: %d\n", x, y, button);
     Window focused;
     int revert_to = RevertToParent;
@@ -356,14 +356,14 @@ int main() {
 
     input->enumerate();
 
-    auto mice = input->getMice(); 
-    for (const auto mouse : mice) { 
-        printf("Found a mouse %s with device id: %d\n", mouse->name(), mouse->deviceId()); 
+    auto mice = input->getMice();
+    for (const auto mouse : mice) {
+        printf("Found a mouse %s with device id: %d\n", mouse->name(), mouse->deviceId());
     }
 
-    auto keyboards = input->getKeyboards(); 
-    for (const auto kb : keyboards) { 
-        printf("Found a keyboard %s with device id: %d\n", kb->name(), kb->deviceId()); 
+    auto keyboards = input->getKeyboards();
+    for (const auto kb : keyboards) {
+        printf("Found a keyboard %s with device id: %d\n", kb->name(), kb->deviceId());
     }
 
     bool input_valid = false;
@@ -379,8 +379,8 @@ int main() {
     KeyboardPtr keyboard1 = SelectKeyboard(input);
 
     X11InputControllerPtr x11_input = dynamic_pointer_cast<X11InputController>(input);
-   
-    // detach devices from Xserver so we can control them manually 
+
+    // detach devices from Xserver so we can control them manually
     x11_input->detachDevice(pointer1);
     x11_input->detachDevice(pointer2);
     x11_input->detachDevice(keyboard1);
@@ -390,7 +390,7 @@ int main() {
     printf("Keyboard1: %s\n", keyboard1->name());
 
     printf("Default root window: %d\n", root);
-    
+
     // create xdo instance
     xdo = xdo_new_with_opened_display(d, NULL, 0);
 
@@ -405,8 +405,8 @@ int main() {
 
     // Enable pass through clicks
     AllowInputPassthrough(d, overlay);
-   
-    // Make overlay window visible 
+
+    // Make overlay window visible
     XMapWindow(d, overlay);
 
     cairo_t* cr = cairo_create(overlay_surface);
@@ -439,12 +439,12 @@ int main() {
 
     while (!exit_loop) {
         auto state1 = pointer1->getMouseState();
-        auto state2 = pointer2->getMouseState(); 
+        auto state2 = pointer2->getMouseState();
         int x1 = state1->x * scale_x1;
         int y1 = state1->y * scale_y1;
         int x2 = state2->x  * scale_x2;
         int y2 = state2->y * scale_y2;
- 
+
         //printf("Cursor1\traw_x: %d, raw_y: %d, x: %d, y: %d\n", state1->x, state1->y, x1, y1);
         //printf("Cursor2\traw_x: %d, raw_y: %d, x: %d, y: %d\n", state2->x, state2->y, x2, y2);
 
@@ -496,7 +496,7 @@ int main() {
             SendMouseDown(d, x1, y1, Button3);
             last_state1.btn3_pressed = true;
         }
-        
+
         // Cursor2
         if (last_state2.btn1_pressed && !state2->btn1_pressed) {
             pointer2_drag_drop_count = 0;
@@ -555,7 +555,7 @@ int main() {
     }
 
     ShowGlobalCursor(d);
-    
+
     x11_input->attachDevice(pointer1);
     x11_input->attachDevice(pointer2);
     x11_input->attachDevice(keyboard1);
