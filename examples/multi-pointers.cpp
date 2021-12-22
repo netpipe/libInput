@@ -550,6 +550,9 @@ int main() {
         // draw cursors
         DrawCursor(cr, x1, y1, cursor1);
         DrawCursor(cr, x2, y2, cursor2);
+
+XRaiseWindow(d, overlay_win); 
+
         // delay loop
         std::this_thread::sleep_for(std::chrono::milliseconds(10)); // 100Hz
     }
