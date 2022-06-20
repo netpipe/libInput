@@ -17,7 +17,7 @@ might even work with windows via www.straightrunning.com/XmingNotes ?
 
 might impliment into OIS next open input system
 
-https://github.com/NoobsArePeople2/manymouse has parts for the windows version.
+https://github.com/icculus/manymouse has parts for the windows version.
 
 
 
